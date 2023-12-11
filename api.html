@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Arttapon</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="./style.css">
+<style>
+  .input{
+    display: inline-block;
+    margin-left: 40%;
+  }
+  h1 li {
+    text-align: center;
+  }
+  h1 {
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="bgimg w3-display-container w3-animate-opacity w3-text-white Animated-Radial-Menu">
+  <header>
+  <div class=" btn-drop">
+        <a href="./index.html">Home</a>
+        <a href="./Profile.html">Profile</a>
+        <a href="./java.html">Java</a>
+        <a href="./api.html">Api</a>
+  </div>
+  </header>
+
+  <h1 style="text-align: center;">API</h1>
+
+<hr>
+<h2 style="text-align: center;">Click to change</h2>
+<p style="text-align: center;" id="demo2">Hi</p>
+<button style="margin-left: 695px;" onclick="myFunction()">Click me</button>
+
+<script>
+  //document.getElementById("demo").innerHTML = "Hello World";
+  function myFunction() {
+    fetch("https://catfact.ninja/fact")
+      .then(function(response){
+        return response.json()
+      })
+      .then(function(data){
+        let txt = "";
+          for (let x in data) {
+            txt += data[x] + " ";
+          document.getElementById("demo2").innerHTML = txt;
+          };
+      
+        return data;
+      })  
+}
+</script>
+
+<h1>Random Cat Image</h1>
+  <img style="width: 300px; height: 300px; border-radius: 20%; margin-left: 40%;" id="catImage" src="" alt="Random Cat Image">
+  <button onclick="getRandomCat()">Get Random Cat</button>
+
+  <script>
+    function getRandomCat() {
+      fetch('https://api.thecatapi.com/v1/images/search')
+        .then(response => response.json())
+        .then(data => {
+          const catImage = document.getElementById('catImage');
+          catImage.src = data[0].url;
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    }
+  </script>
+
+<h1>Change Parameter and Fetch API Data</h1>
+<input style="margin-left: 40%;" type="text" id="nameInput" placeholder="Enter name">
+<button onclick="fetchData()">Fetch Data</button>
+<p id="apiResult"></p>
+
+<script>
+  function fetchData() {
+    const name = document.getElementById('nameInput').value;
+
+    fetch(`https://api.nationalize.io?name=${name}`)
+      .then(response => response.json())
+      .then(data => {
+        const apiResult = document.getElementById('apiResult');
+        apiResult.textContent = JSON.stringify(data);
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  }
+</script>
+
+<h1>Crypto Prices</h1>
+<p style="text-align: center;">Last updated: <span id="lastUpdated"></span></p>
+  <ul style="position: relative; left: 600px;" id="cryptoList"></ul>
+  <label for="intervalSelect">Update Interval (seconds): </label>
+  <select id="intervalSelect" onchange="updateInterval(this.value)">
+    <option value="10">10</option>
+    <option value="30" selected>30</option>
+    <option value="60">60</option>
+  </select>
+  <p id="countdown"></p>
+
+  <script>
+    let intervalId;
+    let intervalSeconds = 30;
+
+    function updateInterval(value) {
+      clearInterval(intervalId);
+      intervalSeconds = parseInt(value);
+      fetchCryptoPrices(); // เรียกใช้ฟังก์ชันเพื่ออัปเดตทันทีเมื่อมีการเปลี่ยนแปลง
+      startCountdown();
+      intervalId = setInterval(fetchCryptoPrices, intervalSeconds * 1000);
+    }
+
+    function fetchCryptoPrices() {
+      fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd')
+        .then(response => response.json())
+        .then(data => {
+          const cryptoList = document.getElementById('cryptoList');
+          cryptoList.innerHTML = '';
+
+          data.forEach(crypto => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${crypto.name}: $${crypto.current_price}`;
+
+            if (crypto.price_change_24h > 0) {
+              listItem.style.color = 'green';
+            } else if (crypto.price_change_24h < 0) {
+              listItem.style.color = 'red';
+            }
+
+            cryptoList.appendChild(listItem);
+          });
+
+          const lastUpdated = new Date().toLocaleTimeString();
+          document.getElementById('lastUpdated').textContent = lastUpdated;
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    }
+
+    function startCountdown() {
+      let seconds = intervalSeconds;
+      const countdown = document.getElementById('countdown');
+      countdown.textContent = `Next update in ${seconds} seconds`;
+
+      const countdownInterval = setInterval(() => {
+        seconds--;
+        countdown.textContent = `Next update in ${seconds} seconds`;
+
+        if (seconds <= 0) {
+          clearInterval(countdownInterval);
+        }
+      }, 1000);
+    }
+
+    // เรียกใช้งาน API เริ่มต้น
+    fetchCryptoPrices();
+    startCountdown();
+    intervalId = setInterval(fetchCryptoPrices, intervalSeconds * 1000);
+  </script>
+<hr>
+
+<form 
+  method="POST" 
+  action="https://script.google.com/macros/s/AKfycbytIfTjtWTSRUesgNj9je2O0NgOsZM4HRYY4ayb4qLFEjppTdno4NbbPVjHmbmcLmMM/exec"
+>
+  <input style="margin-left: 100px;" name="Email" type="email" placeholder="Email" required>
+  <input name="Name" type="text" placeholder="Name" required>
+  <button type="submit">Send</button>
+</form>
+<iframe style="margin-top: 18px; margin-left: px; width: 100%; height: 100%;" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQuqOQqybuYSOuBXU_MPvFYr6w9jUqWrGsMZxrVOrv2Mbjo86P43nSOjiJzX081G0rHpSZ1jqsaUZAr/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
+
+<!-- End page content -->
+</div>
+<!-- Footer -->
+
+
+</div>
+
+
+</body>
+</html>

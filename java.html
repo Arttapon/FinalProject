@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Arttapon</title>
+<link rel="website icon" type="png" href="">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="./style.css">
+<style>
+  body {
+      font-family: Arial, sans-serif;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+  }
+  .container {
+      text-align: center;
+  }
+  #qrcode {
+      margin-top: 20px;
+      margin-left: 550px;
+  }
+</style>
+</head>
+<body>
+
+<div class="bgimg w3-display-container w3-animate-opacity w3-text-white Animated-Radial-Menu">
+  <header>
+  <div class=" btn-drop">
+        <a href="./index.html">Home</a>
+        <a href="./Profile.html">Profile</a>
+        <a href="./java.html">Java</a>
+        <a href="./api.html">Api</a>
+  </div>
+  </header>
+  
+  <div class="container">
+    <h1 style="text-align: center;">Generate QR Code</h1>
+    <input style="align-items: center;" type="text" id="url" placeholder="Enter URL" required>
+    <button onclick="generateQRCode()">Generate QR Code</button>
+    <div id="qrcode"></div>
+
+
+    <h1>Captcha Generator</h1>
+    <div>
+      <input type="text" id="captchaInput" placeholder="Enter Captcha">
+      <!-- <label for="refreshCaptcha">Refresh Captcha:</label> -->
+      <input type="checkbox" id="refreshCaptcha"><br>
+      <button onclick="checkCaptcha()">Check Captcha</button>
+      <button onclick="GenerateCaptCha()">Generate Captcha</button>
+    </div>
+    <p id="captchaOutput"></p>
+    <!-- <p id="result"></p> -->
+
+    
+    <h1>Currency Converter</h1>
+    <label for="dollarInput">Enter Dollar Amount:</label>
+    <input type="text" id="dollarInput">
+    <button onclick="convertCurrency()">Convert</button>
+  
+    <p id="result"></p>
+
+    <h1>Temperature Converter</h1>
+    <label for="fahrenheitInput">Enter Temperature in Fahrenheit:</label>
+    <input type="number" id="fahrenheitInput">
+    <button onclick="convertAndDisplayTemperature()">Convert</button>
+  
+    <p id="resultTemp"></p>
+
+    <h1>Day to Second Converter</h1>
+    <label for="daysInput">Enter Number of Days:</label>
+    <input type="number" id="daysInput">
+    <button onclick="convertAndDisplaySeconds()">Convert</button>
+  
+    <p id="resultDaytime"></p>
+  
+
+
+
+</div>
+
+<script>
+  function convertDaysToSeconds(days) {
+    const seconds = days * 24 * 60 * 60;
+    return seconds;
+  }
+
+  function convertAndDisplaySeconds() {
+    const daysInput = document.getElementById('daysInput').value;
+    const numberOfSeconds = convertDaysToSeconds(parseFloat(daysInput));
+    document.getElementById('resultDaytime').textContent = `${daysInput} days is equal to ${numberOfSeconds} seconds.`;
+  }
+</script>
+
+
+<script>
+  function convertFahrenheitToCelsius(fahrenheit) {
+    const celsius = (fahrenheit - 32) * 5 / 9;
+    return celsius;
+  }
+
+  function convertAndDisplayTemperature() {
+    const fahrenheitInput = document.getElementById('fahrenheitInput').value;
+    const temperatureInCelsius = convertFahrenheitToCelsius(parseFloat(fahrenheitInput));
+    document.getElementById('resultTemp').textContent = `Temperature in Celsius: ${temperatureInCelsius.toFixed(2)} °C`;
+  }
+</script>
+
+
+<script>
+  function extractCurrencyValue(str, rate) {
+    const amountInDollars = parseFloat(str.replace(/[^\d.-]/g, ''));
+    const amountInBaht = amountInDollars * rate;
+    return amountInBaht;
+  }
+
+  function convertCurrency() {
+    const dollarInput = document.getElementById('dollarInput').value;
+    const exchangeRate = 33.5; // ตัวอย่างอัตราแลกเปลี่ยน สามารถเปลี่ยนตามที่ต้องการ
+
+    const resultInBaht = extractCurrencyValue(dollarInput, exchangeRate);
+    document.getElementById('result').textContent = `Equivalent in Baht: ${resultInBaht.toFixed(2)}`;
+  }
+</script>
+
+
+<script>
+  let generatedCaptcha = "";
+
+  function GenerateCaptCha() {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const Captchalength = 6;
+    let Captchacode = "";
+    for (let i = 0; i < Captchalength; i++) {
+      const RandomIndex = Math.floor(Math.random() * characters.length);
+      Captchacode += characters.charAt(RandomIndex);
+    }
+    document.getElementById("captchaOutput").textContent = Captchacode;
+    generatedCaptcha = Captchacode;
+    document.getElementById("captchaInput").value = "";
+    document.getElementById("result").textContent = "";
+
+    const refreshCheckbox = document.getElementById("refreshCaptcha");
+    if (refreshCheckbox.checked) {
+      document.getElementById("captchaOutput").textContent = "";
+      document.getElementById("captchaInput").value = "";
+      document.getElementById("result").textContent = "";
+      refreshCheckbox.checked = false;
+    }
+  }
+
+  function checkCaptcha() {
+    const userInput = document.getElementById("captchaInput").value;
+    if (userInput.toLowerCase() === generatedCaptcha.toLowerCase()) {
+      alert("Correct Captcha!");
+    } else {
+      alert("Incorrect Captcha. Please try again.");
+    }
+  }
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+    function generateQRCode() {
+        var url = document.getElementById('url').value;
+        var qrcode = new QRCode(document.getElementById('qrcode'), {
+            text: url,
+            width: 128,
+            height: 128,
+        });
+    }
+</script><hr>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<canvas style="background-color: bisque; display: block; box-sizing: border-box; height: 400px; width: 400px;" id="myChart1" width="1265" height="1265"></canvas>
+<script>
+  const ctx1 = document.getElementById('myChart1').getContext('2d');
+
+// สร้างชุดข้อมูล
+const data = {
+  labels: ['A', 'B', 'C', 'D', 'E'],
+  datasets: [{
+    label: 'Example Data',
+    data: [12, 19, 3, 5, 2],
+    backgroundColor: [
+      'rgba(255, 99, 132, 0.2)',
+      'rgba(54, 162, 235, 0.2)',
+      'rgba(255, 206, 86, 0.2)',
+      'rgba(75, 192, 192, 0.2)',
+      'rgba(153, 102, 255, 0.2)',
+    ],
+    borderColor: [
+      'rgba(255, 99, 132, 1)',
+      'rgba(54, 162, 235, 1)',
+      'rgba(255, 206, 86, 1)',
+      'rgba(75, 192, 192, 1)',
+      'rgba(153, 102, 255, 1)',
+    ],
+    borderWidth: 1
+  }]
+};
+
+// สร้าง Chart
+const myChart1 = new Chart(ctx1, {
+  type: 'bar',
+  data: data,
+  options: {
+    // ตั้งค่าต่างๆ ของ Chart ได้ตามต้องการ
+  }
+});
+
+</script><hr>
+
+
+<canvas style="background-color: antiquewhite;" id="myChart2" width="400" height="400"></canvas>
+<script>
+  
+  // ดึงข้อมูล JSON จากไฟล์
+  fetch('country-by-independence-date.json')
+    .then(response => response.json())
+    .then(data => {
+      // ดึงข้อมูล country และ location จาก JSON
+      const country = data.map(item => item.country);
+      const independence = data.map(item => item.independence);
+      const ctx = document.getElementById('myChart2');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: country,
+          datasets: [{
+            label: 'country',
+            data: independence,
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    });
+ </script>
+
+
+
+
+  <div style="color: white;" class="w3-display-bottomleft w3-padding-large">
+    Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a>
+  </div>
+</div>
+
+</body>
+</html>
